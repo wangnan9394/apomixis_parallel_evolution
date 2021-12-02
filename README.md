@@ -1,4 +1,8 @@
 # apomixis_parallel_evolution
+
+## About the data
+see:https://doi.org/10.5281/zenodo.5748662
+
 A groups of data and scripts in the analysis
 
 Multi_test.py //perform multiple test
