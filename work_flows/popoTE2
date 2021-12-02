@@ -1,0 +1,15 @@
+##step1
+bedtools getfasta -s -name -fi sjg_v2.fa -fo sjg.teseqs.fa -bed te.bed
+bedtools maskfasta -fi sjg_v2.fa -bed te.bed -fo maskedRefGenome.fa
+##step2
+cat maskedRefGenome.fa sjg.teseqs.altername.fa > sjg.temergedref.fasta
+##step3
+bwa bwasw -t 3 sjg.temergedref.fasta sample_1.fq >sample_1.sam
+bwa bwasw -t 3 sjg.temergedref.fasta sample_2.fq >sample_2.sam
+java -jar ../popte2-v1.10.03.jar se2pe --fastq1 DB1.fq --fastq2 DB2.fq --bam1 DB1.sam --bam2 DB2.sam --sort --output sample.sort.bam
+##step4
+java -jar ../popte2.jar ppileup --bam France.sort.bam --bam Georgia.sort.bam --bam Ghana.sort.bam --hier walkthrough-refgenome/dmelconsensustes.tehier --output Fra_Geo_Gha.ppileup.gz
+##step5
+java -jar ../../../popte2-v1.10.03.jar frequency --ppileup sjg.ppileup.gz --signature sjg.ppileup.gz.signatures --output sjg.ppileup.gz.signatures.freqsig
+##step6
+java -jar ../../../popte2-v1.10.03.jar pairupSignatures --signature sjg.ppileup.gz.signatures.freqsig --ref-genome ../../../01.ref/sjg.temergedref.fasta --hier ../te-hierarchy.txt --min-distance -200 --max-distance 300 --output sjg.ppileup.gz.signatures.freqsig.teinsertions &
