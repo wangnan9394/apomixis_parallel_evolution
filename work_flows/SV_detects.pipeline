@@ -1,0 +1,20 @@
+##delly
+docker run -v $PWD:/work -w /work 5e497753dc56 delly call -x /work/te.excl -g /work/sjg_v2.fa -o /work/out.test /work/sjg_PN01.sort.rmdup.bam
+docker run -v $PWD:/work -w /work 5e497753dc56 delly merge -o /work/sites.bcf /work/DB.sort.removedup.bam.bcf /work/PN.sort.removedup.bam.bcf ...
+docker run -v $PWD:/work -w /work 5e497753dc56 delly call -g /work/sjg_v2.fa -v /work/sites.bcf -o samples.geno.bcf -x /work/te.excl samples.bam
+bcftools merge -m id -O b -o merged.bcf s1.geno.bcf s2.geno.bcf ... sN.geno.bcf
+tabix merged.bcf
+docker run -v $PWD:/work -w /work 5e497753dc56 delly filter -f germline -o /work/germline.bcf /work/merged.bcf
+bcftools view delly.bcf > delly.vcf
+
+##lumpy
+#for each samples
+samtools view -b -F 1294 sample.bam > sample.discordants.unsorted.bam
+samtools view -h sample.bam     | /home/wangnan/bin/lumpy-sv-0.3.1/scripts/extractSplitReads_BwaMem -i stdin     | samtools view -Sb -  > sample.splitters.unsorted.bam
+samtools sort -o sample.discordants.bam sample.discordants.unsorted.bam &
+samtools sort -o sample.splitters.bam sample.splitters.unsorted.bam &
+docker run -v $PWD:/work -w /work ed11610ab18b lumpyexpress -B /work/sample.bam -S /work/sample.splitters.bam -D /work/sample.discordants.bam -o /work/sample.vcf
+#for each samples
+docker run -v $PWD:/work -w /work ed11610ab18b lumpyexpress -B /work/sample1.bam,/work/sample2.bam,/work/sample3.bam -S /work/sample1.splitters.bam,/work/sample2.splitters.bam,/work/sample3.splitters.bam -D /work/sample1.discordants.bam,/work/sample2.discordants.bam,/work/sample3.discordants.bam -o /work/multi_sample.vcf
+#for many samples
+docker run -v $PWD:/work -w /work ed11610ab18b lumpyexpress -B -mw 4 -tt 0 -o /work/2021-4-1-all_sample.vcf
