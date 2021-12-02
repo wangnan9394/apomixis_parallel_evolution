@@ -1,0 +1,52 @@
+#mapping
+genome = /home/wangnan/ZHP/BSA/Cclementina_182_v1.fa
+high_fq1 = /home/wangnan/ZHP/BSA/BSA_RP1_1_clean.fq.gz
+high_fq2 = /home/wangnan/ZHP/BSA/BSA_RP1_2_clean.fq.gz
+low_fq1 = /home/wangnan/ZHP/BSA/BSA_RP2_1_clean.fq.gz
+low_fq2 = /home/wangnan/ZHP/BSA/BSA_RP2_2_clean.fq.gz
+#index
+ln -s $genome > ref_genome.fasta #建立软连接
+genome = ref_genome.fasta
+bwa index $genome
+samtools faidx $genome
+picard CreateSequenceDictionary R=$genome O=ref_genome.dict
+#bulk_high
+bwa mem -R "@RG\tID:high\tLB:high\tSM:high\tPL:illumina" -t 80 $genome $high_fq1 $high_fq2 >high.sam 
+### sort and convert sam to bam
+samtools sort -o high.sort.bam high.sam
+samtools view -b  -F 12 -@ 40 high.sort.bam > high.sort.mapped.bam
+samtools rmdup high.sort.mapped.bam high.mapped.rmdup.bam
+samtools view -bq 1 high.mapped.rmdup.bam >high.mapped.rmdup.uniq.bam
+samtools index high.mapped.rmdup.uniq.bam
+#bulk_low
+bwa mem -R "@RG\tID:low\tLB:low\tSM:low\tPL:illumina" -t 80 $genome $low_fq1 $low_fq2 >low.sam 
+### sort and convert sam to bam
+samtools sort -o low.sort.bam low.sam
+samtools view -b  -F 12 -@ 40 low.sort.bam > low.sort.mapped.bam
+samtools rmdup low.sort.mapped.bam low.mapped.rmdup.bam
+samtools view -bq 1 low.mapped.rmdup.bam >low.mapped.rmdup.uniq.bam #bq1过滤得到唯一mapping的reads
+samtools index low.mapped.rmdup.uniq.bam
+#call_SNP
+gatk HaplotypeCaller -R $genome -I high.mapped.rmdup.uniq.bam -I low.mapped.rmdup.uniq.bam -O high_low.variants.vcf
+gatk SelectVariants -R $genome -V high_low.variants.vcf -select-type SNP -O high_low.SNP.vcf
+gatk VariantFiltration -V high_low.SNP.vcf --filter-expression "QD < 2.0" --filter-name QD --filter-expression "MQ < 40.0"  --filter-name MQ  --filter-expression "FS > 60.0"  --filter-name FS  --filter-expression "SOR > 3.0"  --filter-name SOR    -O high_low.filter.SNP.vcf
+gatk VariantsToTable -R  $genome -V high_low.filter.SNP.vcf -F CHROM -F POS -F REF -F ALT -GF AD -GF DP -GF GQ -GF PL -O high_low.filter.SNP.table
+
+#folowing_under_R!!!
+library(magrittr)
+library(genefilter)
+library(magrittr)
+library("QTLseqr")
+library(ggplot2)
+file<-"high_low.filter.SNP.table"
+LowBulk<-"low"
+HighBulk<-"high"
+Chroms<-read.table("scaffold_name.csv", header = F)
+df<- importFromGATK(file=file,highBulk=HighBulk,lowBulk=LowBulk,chromList=Chroms$V1)
+df_filt<-filterSNPs(SNPset=df,refAlleleFreq=0.20,minTotalDepth=100,maxTotalDepth=
+400,minSampleDepth=40,minGQ=99)
+df_filt2<-runGprimeAnalysis(SNPset=df_filt,windowSize=1e6,outlierFilter="deltaSNP",
+maxk=10000)
+write.table(df_filt2, file = "result1.table")
+P1<-plotQTLStats(SNPset=df_filt2,var="Gprime",plotThreshold=TRUE,q=0.01)
+ggsave("result1.tiff",P1,dpi=600,width=210,height=297/4,units="mm")
