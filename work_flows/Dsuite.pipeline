@@ -1,0 +1,9 @@
+#prepared nwk pops.txt
+#step1
+/home/Dsuite/Build/Dsuite Dtrios -t TREE.JG.SJG.nwk SJG_JG_no_clone.vcf SETS.txt &
+#step2
+/home/Dsuite/Build/Dsuite Fbranch TREE.JG.SJG.nwk SETS_tree.txt >fb.txt
+#step3,plotting
+/home/Dsuite/utils/dtools.py fb.txt TREE.JG.SJG.nwk
+#step4
+/home/Dsuite/Build/Dsuite Dinvestigate INPUT_FILE.vcf.gz SETS.txt test_trios.txt
