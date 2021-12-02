@@ -20,6 +20,9 @@ reduce_ref_bias_on_outgroup.py //reduce the reference bias by outgroup variants
 used_docker.list // a list including software in docker, I make a lot of docker imgaes which could be directly used, 3ks!! ):
 
 Anno.SIFT.bed // a bed file used in SIFT statistics.
+
+apomixis_transition.slim // a slim3 scripts for apomxixis transiton after admixture
+
 ## work_flows
 BSA.pipeline //a pipeline for bulked segregant analysis(BSA) analysis
 
@@ -32,3 +35,4 @@ popoTE2.pipeline //a pipeline for MITE insertion analysis
 population_strcture.pipeline  //a pipeline for population strcture analysis
 
 smcpp.pipeline  //a pipeline for effective population size anlysis
+
