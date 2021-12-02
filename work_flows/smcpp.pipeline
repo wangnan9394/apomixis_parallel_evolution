@@ -1,0 +1,24 @@
+#for each chromsome
+smc++ vcf2smc my.data.vcf.gz out/chr1.smc.gz chr1 Pop1:S1,S2
+estimate -o analysis/ 2.2e-8 out/example.chr*.smc.gz
+#combined_files
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/3.asexual/chr_all/ 2.2e-8 /work/3.asexual/out.chr1.smc.gz /work/3.asexual/out.chr2.smc.gz /work/3.asexual/out.chr3.smc.gz /work/3.asexual/out.chr4.smc.gz /work/3.asexual/out.chr5.smc.gz /work/3.asexual/out.chr6.smc.gz /work/3.asexual/out.chr7.smc.gz /work/3.asexual/out.chr8.smc.gz /work/3.asexual/out.chr9.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/4.Jg/chr_all/ 2.2e-8 /work/4.Jg/out.chr1.smc.gz /work/4.Jg/out.chr2.smc.gz /work/4.Jg/out.chr3.smc.gz /work/4.Jg/out.chr4.smc.gz /work/4.Jg/out.chr5.smc.gz /work/4.Jg/out.chr6.smc.gz /work/4.Jg/out.chr7.smc.gz /work/4.Jg/out.chr8.smc.gz /work/4.Jg/out.chr9.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/3.asexual/chr_1/ 2.2e-8 /work/3.asexual/out.chr1.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/3.asexual/chr_2/ 2.2e-8 /work/3.asexual/out.chr2.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/3.asexual/chr_3/ 2.2e-8 /work/3.asexual/out.chr3.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/3.asexual/chr_4/ 2.2e-8 /work/3.asexual/out.chr4.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/3.asexual/chr_5/ 2.2e-8 /work/3.asexual/out.chr5.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/3.asexual/chr_6/ 2.2e-8 /work/3.asexual/out.chr6.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/3.asexual/chr_7/ 2.2e-8 /work/3.asexual/out.chr7.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/3.asexual/chr_8/ 2.2e-8 /work/3.asexual/out.chr8.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/3.asexual/chr_9/ 2.2e-8 /work/3.asexual/out.chr9.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/2.sexual/chr_1/ 2.2e-8 /work/2.sexual/out.chr1.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/2.sexual/chr_2/ 2.2e-8 /work/2.sexual/out.chr2.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/2.sexual/chr_3/ 2.2e-8 /work/2.sexual/out.chr3.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/2.sexual/chr_4/ 2.2e-8 /work/2.sexual/out.chr4.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/2.sexual/chr_5/ 2.2e-8 /work/2.sexual/out.chr5.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/2.sexual/chr_6/ 2.2e-8 /work/2.sexual/out.chr6.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/2.sexual/chr_7/ 2.2e-8 /work/2.sexual/out.chr7.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/2.sexual/chr_8/ 2.2e-8 /work/2.sexual/out.chr8.smc.gz &
+docker run -v $PWD:/work -w /work c00d56471349 estimate -o /work/2.sexual/chr_9/ 2.2e-8 /work/2.sexual/out.chr9.smc.gz &
