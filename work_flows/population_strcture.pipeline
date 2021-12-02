@@ -1,0 +1,18 @@
+##NgsAdmix,K=2-18
+angsd -P 24 -b POP1_bamlist.txt -ref myreference.fa -out POP1 -uniqueOnly 0 -remove_bads 1 -only_proper_pairs 0 -trim 0 -C 50 -baq 1 -minMapQ 20 -minInd 4 -setMinDepthInd 3 -nInd 7 -SNP_pval 1e-3 -minMaf 0.05 -doDepth 1 -doCounts 1 -domajorminor 1 -domaf 1 -gl 1 -doGlf 3 
+docker run -v $PWD:/work -w /work 158dea7e0f41 NGSadmix -likes /work/input.gz -K 3 -minMaf 0.05 -seed 21 -P 80 -o /work/myownoutfilesK3
+
+##ngsld
+angsd -bam all.files -GL 2 -doMajorMinor 1 -doMaf 1 -SNP_pval 2e-6 -minMapQ 30 -minQ 20 -minInd 25 -minMaf 0.05 -doGlf 2 -out all -P 20
+ngsLD --geno 9.beagle.gz --n_ind 116 --n_sites 2781316 --out 9.out --min_maf 0.05 --ignore_miss_data --max_kb_dist 100 --n_threads 6 --pos 9.pos
+
+
+##admixture
+plink --vcf deepvariant.cohort.vcf --recode vcf-iid --out STEP1 --allow-extra-chr --const-fid --vcf-half-call m
+plink --vcf STEP1.vcf --indep-pairwise 50 10 0.5 --out STEP2 --allow-extra-chr --vcf-half-call m --const-fid --recode vcf-iid
+plink --vcf STEP2.vcf --extract STEP2.prune.in --recode vcf-iid --out STEP2.prune.in.vcf --allow-extra-chr --const-fid
+vcftools --vcf STEP2.prune.in.vcf.vcf --recode --not-chr chrUn --stdout > STEP3.vcfplink --vcf STEP3.vcf --out STEP3 --const-fid
+for K in {2..16}; do admixture -j20 --cv plink.bed $K | tee log${K}.out;done
+
+##IQTREE2
+iqtree2 -s 234_indv.phy -st DNA -T 40  -mem 100G -m GTR -redo -B 1000 -bnni -alrt 1000 --prefix iqtree2.test 
