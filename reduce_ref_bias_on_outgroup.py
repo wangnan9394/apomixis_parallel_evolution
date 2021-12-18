@@ -15,7 +15,7 @@ required.add_argument('-i', '--input', metavar = '[input_vcf]', help = 'input_vc
 required.add_argument('-g', '--group', metavar = '[outgroup_list]', help = 'outgroup_list', required = True)
 required.add_argument('-o', '--output', metavar = '[output]', help = 'output', required = True)
 optional.add_argument('-h', '--help', action = 'help', help = 'help')
-
+args = parser.parse_args()
 vcf_reader = vcf.Reader(open(args.input, 'r'))
 
 def rever_SNP(gt):
