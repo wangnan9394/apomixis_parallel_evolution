@@ -1,5 +1,6 @@
 # apomixis_parallel_evolution
-
+## Cite:Structural variation and parallel evolution of apomixis in citrus during domestication and diversification
+<https://doi.org/10.1093/nsr/nwac114>
 ## About the data
 see:https://doi.org/10.5281/zenodo.5748662
 
